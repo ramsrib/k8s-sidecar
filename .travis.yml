@@ -2,7 +2,7 @@ dist: xenial
 sudo: required
 env:
   global:
-    - DOCKER_REPO=ramsrib/k8s-sidecar
+    - DOCKER_REPO=${DOCKER_USER}/k8s-sidecar
 before_install:
   - curl -fsSL https://get.docker.com | sh
   - echo '{"experimental":"enabled"}' | sudo tee /etc/docker/daemon.json
@@ -17,7 +17,7 @@ language: bash
 script:
   - >
     if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-      docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
+      echo $DOCKER_PASS | docker login -u "$DOCKER_USER" --password-stdin &> /dev/null
       TAG="${TRAVIS_TAG:-latest}"
       docker buildx build \
       --progress plain \
